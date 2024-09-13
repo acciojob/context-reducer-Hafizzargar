@@ -11,7 +11,7 @@ const App = () => {
 
 
     const login = () => {
-        setCurrentUser('rohan');
+        setCurrentUser('Hafizzargar');
         setIsAuthenticated(true);
     };
 
