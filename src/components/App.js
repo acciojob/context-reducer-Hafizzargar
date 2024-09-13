@@ -1,50 +1,73 @@
+//cypress test cases not running
 // App.js
-import React, { useContext, useState } from 'react';
-import { AppContext, AppProvider } from './Context';
+import React, { useState, useContext } from 'react';
+
 
 const App = () => {
-  const { isAuthenticated, login, signout, items, addItem, removeItem, clearList } = useContext(AppContext);
-  const [inputValue, setInputValue] = useState('');
+    const [inputValue, setInputValue] = useState('');
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [currentUser, setCurrentUser] = useState('');
+    const [items, setItems] = useState([]);
 
-  const handleAdd = () => {
-    if (inputValue.trim()) {
-      addItem(inputValue.trim());
-      setInputValue('');
-    }
-  };
 
-  return (
-    <div className="app">
-      <button id="login-btn" onClick={login}>Login</button>
-      <button id="signout" onClick={signout}>Sign Out</button>
-      <div id="current-user">
-        Current user: rohan, isAuthenticated: {isAuthenticated ? 'Yes' : 'No'}
-      </div>
-      <input
-        id="shopping-input"
-        type="text"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-      />
-      <button onClick={handleAdd}>Add</button>
-      <button id="clear-list" onClick={clearList}>Clear List</button>
-      <ul>
-        {items.map((item) => (
-          <li key={item} id={`item-${item}`}>
-            {item}
-            <button id={`remove-${item}`} onClick={() => removeItem(item)}>Remove</button>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+    const login = () => {
+        setCurrentUser('rohan');
+        setIsAuthenticated(true);
+    };
+
+    const logout = () => {
+        setCurrentUser('');
+        setIsAuthenticated(false);
+    };
+
+    const addItem = (item) => {
+        setItems([...items, item]);
+    };
+
+    const removeItem = (item) => {
+        setItems(items.filter(i => i !== item));
+    };
+
+    const clearItems = () => {
+        setItems([]);
+    };
+
+
+    const handleAdd = () => {
+        if (inputValue.trim()) {
+            addItem(inputValue.trim());
+            setInputValue('');
+        }
+    };
+
+
+    return (
+        <div>
+            <div>
+                <button id="login-btn" onClick={login}>Login</button>
+                <button id="signout" onClick={logout}>Signout</button>
+            </div>
+            <div id="current-user">
+                {`Current user: ${currentUser}, isAuthenticated: ${isAuthenticated ? 'Yes' : 'No'}`}
+            </div>
+            <input
+                id="shopping-input"
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+            />
+            <button onClick={handleAdd}>Add</button>
+            <button id="clear-list" onClick={clearItems}>Clear List</button>
+            <ul>
+                {items.map(item => (
+                    <li key={item} id={`item-${item}`}>
+                        {item}
+                        <button id={`remove-${item}`} onClick={() => removeItem(item)}>Remove</button>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
 };
 
-// Wrap your App component with the provider
-const MainApp = () => (
-  <AppProvider>
-    <App />
-  </AppProvider>
-);
-
-export default MainApp;
+export default App;
